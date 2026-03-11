@@ -296,6 +296,7 @@ body::before{
 .tag-qa{color:var(--green);background:var(--green-dim);border:1px solid rgba(16,185,129,0.2)}
 .tag-jira{color:var(--blue);background:var(--blue-dim);border:1px solid rgba(59,130,246,0.2)}
 .tag-intg{color:var(--amber);background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2)}
+.tag-auto{color:#F59E0B;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
 .tag-docs{color:var(--purple);background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)}
 .skill-info{min-width:0}
 .skill-name{
@@ -521,8 +522,8 @@ body::before{
 <div class="metrics">
   <div class="metric m-amber">
     <div class="m-label">Loaded Skills</div>
-    <div class="m-value">12</div>
-    <div class="m-sub">across 5 categories</div>
+    <div class="m-value">21</div>
+    <div class="m-sub">across 6 categories</div>
   </div>
   <div class="metric m-green">
     <div class="m-label">Scheduled Jobs</div>
@@ -560,18 +561,32 @@ body::before{
     <div class="section-line"></div>
   </div>
   <div class="skill-grid">
+    <!-- QA & Testing -->
     <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">test-referral-flow</div><div class="skill-desc">E2E Playwright: advocate → friend → coupon</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">integration-audit</div><div class="skill-desc">JS lib, iframes, placement verification</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">incentive-checker</div><div class="skill-desc">Match task rewards vs live site text</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">mobile-viewport</div><div class="skill-desc">Responsive checks, overflow detection</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">coupon-validation</div><div class="skill-desc">Auto-apply, localStorage, redirect verification</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">text-proofing</div><div class="skill-desc">Spelling, grammar, incentive mismatch detection</div></div></div>
+    <!-- Jira & Project -->
     <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-jira</div><div class="skill-desc">Full CRUD: tasks, bugs, comments, transitions</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-campaigns</div><div class="skill-desc">Campaign management and tracking</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-scoping</div><div class="skill-desc">Scoping tasks and estimation</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">jira-monitoring</div><div class="skill-desc">3× daily scan: new QA Tasks + P0 Blockers</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">auto-bug-filing</div><div class="skill-desc">Create bugs with correct format, no Impact/Fix</div></div></div>
+    <!-- Integration & Platform -->
     <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-integration</div><div class="skill-desc">Site integration validation, JS snippets</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-esp</div><div class="skill-desc">Email service provider configs</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-context</div><div class="skill-desc">Talkable API, site slugs, admin</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-github</div><div class="skill-desc">GitHub repos, PRs, CI integration</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-figma</div><div class="skill-desc">Design assets and mockups access</div></div></div>
+    <!-- Automation -->
+    <div class="skill-item"><span class="skill-tag tag-auto">AUTO</span><div class="skill-info"><div class="skill-name">browser-automation</div><div class="skill-desc">Playwright headless: navigate, scrape, fill, screenshot</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-auto">AUTO</span><div class="skill-info"><div class="skill-name">self-learning</div><div class="skill-desc">PATTERNS.md — captures mistakes, lessons, workarounds</div></div></div>
+    <!-- Documentation -->
     <div class="skill-item"><span class="skill-tag tag-docs">DOCS</span><div class="skill-info"><div class="skill-name">talkable-confluence</div><div class="skill-desc">Wiki pages, QA guides, runbooks</div></div></div>
     <div class="skill-item"><span class="skill-tag tag-docs">DOCS</span><div class="skill-info"><div class="skill-name">ps-departmental-wins</div><div class="skill-desc">Team wins and achievements tracking</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-docs">DOCS</span><div class="skill-info"><div class="skill-name">qa-guidelines</div><div class="skill-desc">Pre/Post-launch QA checklists, Talkable QA guide</div></div></div>
   </div>
 </div>
 

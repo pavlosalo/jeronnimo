@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JERONNIMO — QA Operations Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0B0E11;
+  --bg2:#0F1318;
+  --bg3:#141A21;
+  --card:#151C24;
+  --border:#1E2A36;
+  --border-light:#2A3A4A;
+  --amber:#F59E0B;
+  --amber-dim:rgba(245,158,11,0.15);
+  --green:#10B981;
+  --green-dim:rgba(16,185,129,0.12);
+  --red:#EF4444;
+  --red-dim:rgba(239,68,68,0.12);
+  --blue:#3B82F6;
+  --blue-dim:rgba(59,130,246,0.12);
+  --purple:#8B5CF6;
+  --text:#C9D1D9;
+  --text-dim:#5A6672;
+  --text-bright:#E6EDF3;
+}
+
+body{
+  font-family:'IBM Plex Mono',monospace;
+  background:var(--bg);
+  color:var(--text);
+  font-size:13px;
+  line-height:1.5;
+  overflow-x:hidden;
+}
+
+/* Subtle grid bg */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:0.03;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size:40px 40px;
+}
+
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px;position:relative;z-index:1}
+
+/* TOP BAR — classified banner */
+.classified{
+  text-align:center;
+  padding:6px;
+  background:repeating-linear-gradient(45deg, var(--amber-dim) 0px, var(--amber-dim) 10px, transparent 10px, transparent 20px);
+  border:1px solid rgba(245,158,11,0.2);
+  margin-bottom:24px;
+  position:relative;
+}
+.classified-text{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.3em;
+  color:var(--amber);
+  text-transform:uppercase;
+  background:var(--bg);
+  padding:0 16px;
+  display:inline-block;
+}
+
+/* Header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:24px;
+  gap:16px;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.logo-icon{
+  width:56px;height:56px;
+  border:2px solid var(--amber);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  background:var(--amber-dim);
+  box-shadow:0 0 20px rgba(245,158,11,0.1);
+  flex-shrink:0;
+}
+.logo-text h1{
+  font-family:'Space Mono',monospace;
+  font-size:22px;
+  font-weight:700;
+  color:var(--text-bright);
+  letter-spacing:0.05em;
+  line-height:1.2;
+}
+.logo-text p{
+  font-size:12px;
+  color:var(--text-dim);
+  margin-top:2px;
+}
+.status-badge{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px;
+  border:1px solid rgba(16,185,129,0.3);
+  border-radius:8px;
+  background:var(--green-dim);
+  flex-shrink:0;
+}
+.pulse{
+  width:8px;height:8px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 8px var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.6;transform:scale(0.85)}
+}
+.status-badge span{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+}
+
+/* Metric cards */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.metric{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.metric::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+}
+.metric.m-amber::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.metric.m-green::before{background:linear-gradient(90deg,var(--green),transparent)}
+.metric.m-blue::before{background:linear-gradient(90deg,var(--blue),transparent)}
+.metric .m-label{
+  font-size:10px;
+  font-weight:600;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+  margin-bottom:8px;
+}
+.metric .m-value{
+  font-family:'Space Mono',monospace;
+  font-size:28px;
+  font-weight:700;
+  color:var(--text-bright);
+  line-height:1;
+}
+.metric .m-sub{
+  font-size:11px;
+  color:var(--text-dim);
+  margin-top:4px;
+}
+
+/* Section */
+.section{margin-bottom:24px}
+.section-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+.section-icon{
+  width:28px;height:28px;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+}
+.si-amber{background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2)}
+.si-green{background:var(--green-dim);border:1px solid rgba(16,185,129,0.2)}
+.si-blue{background:var(--blue-dim);border:1px solid rgba(59,130,246,0.2)}
+.si-red{background:var(--red-dim);border:1px solid rgba(239,68,68,0.2)}
+.si-purple{background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)}
+.section-title{
+  font-family:'Space Mono',monospace;
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-dim);
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+}
+.section-line{
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* Pipeline */
+.pipeline{
+  display:flex;
+  align-items:stretch;
+  gap:0;
+  margin-bottom:0;
+  overflow-x:auto;
+}
+.pipe-step{
+  flex:1;
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:12px 10px;
+  text-align:center;
+  position:relative;
+  min-width:100px;
+}
+.pipe-step:first-child{border-radius:8px 0 0 8px}
+.pipe-step:last-child{border-radius:0 8px 8px 0}
+.pipe-step+.pipe-step{border-left:none}
+.pipe-step .p-icon{font-size:18px;margin-bottom:4px}
+.pipe-step .p-name{
+  font-size:11px;
+  font-weight:600;
+  color:var(--text-bright);
+}
+.pipe-step .p-sub{
+  font-size:10px;
+  color:var(--text-dim);
+}
+.pipe-step::after{
+  content:'›';
+  position:absolute;
+  right:-8px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:18px;
+  color:var(--border-light);
+  z-index:2;
+}
+.pipe-step:last-child::after{display:none}
+.pipe-step.active{
+  border-color:var(--green);
+  background:var(--green-dim);
+}
+.pipe-step.active .p-name{color:var(--green)}
+
+/* Skill grid */
+.skill-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+  gap:8px;
+}
+.skill-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:border-color 0.15s, background 0.15s;
+}
+.skill-item:hover{border-color:var(--border-light);background:var(--bg3)}
+.skill-tag{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  font-weight:700;
+  padding:2px 6px;
+  border-radius:4px;
+  letter-spacing:0.1em;
+  flex-shrink:0;
+}
+.tag-qa{color:var(--green);background:var(--green-dim);border:1px solid rgba(16,185,129,0.2)}
+.tag-jira{color:var(--blue);background:var(--blue-dim);border:1px solid rgba(59,130,246,0.2)}
+.tag-intg{color:var(--amber);background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2)}
+.tag-docs{color:var(--purple);background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)}
+.skill-info{min-width:0}
+.skill-name{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text-bright);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.skill-desc{
+  font-size:11px;
+  color:var(--text-dim);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Connection / Cron list */
+.list-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+  gap:6px;
+}
+.list-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:border-color 0.15s;
+}
+.list-item:hover{border-color:var(--border-light)}
+.list-name{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:var(--text);
+}
+.dot-live{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  flex-shrink:0;
+}
+.list-badge{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:0.1em;
+}
+
+/* Cron items */
+.cron-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:border-color 0.15s;
+}
+.cron-item:hover{border-color:var(--border-light)}
+.cron-name{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:var(--text);
+}
+.cron-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--amber);
+  box-shadow:0 0 6px var(--amber);
+  animation:cron-pulse 3s infinite;
+  flex-shrink:0;
+}
+@keyframes cron-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.cron-schedule{
+  font-size:11px;
+  color:var(--text-dim);
+  font-family:'Space Mono',monospace;
+}
+
+/* Team */
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
+  gap:8px;
+}
+.team-card{
+  padding:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  text-align:center;
+  transition:border-color 0.15s;
+}
+.team-card:hover{border-color:var(--border-light)}
+.team-card.lead{border-color:var(--amber);background:var(--amber-dim)}
+.team-avatar{
+  width:36px;height:36px;
+  border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:16px;
+  margin-bottom:6px;
+  border:2px solid var(--border-light);
+  background:var(--bg3);
+}
+.team-card.lead .team-avatar{border-color:var(--amber);background:var(--amber-dim)}
+.team-name{
+  font-size:12px;
+  font-weight:600;
+  color:var(--text-bright);
+}
+.team-role{
+  font-size:10px;
+  color:var(--text-dim);
+  margin-top:2px;
+}
+
+/* Capabilities */
+.cap-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:6px;
+}
+.cap-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transition:border-color 0.15s;
+}
+.cap-item:hover{border-color:var(--border-light)}
+.cap-icon{
+  font-size:16px;
+  flex-shrink:0;
+  line-height:1.3;
+}
+.cap-text{
+  font-size:12px;
+  color:var(--text);
+  line-height:1.4;
+}
+
+/* Footer */
+.footer{
+  margin-top:32px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.footer-left{
+  font-size:12px;
+  color:var(--text-dim);
+  line-height:1.8;
+}
+.footer-left strong{color:var(--text);font-weight:600}
+.footer-right{
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  color:var(--text-dim);
+  text-align:right;
+  letter-spacing:0.08em;
+  line-height:1.8;
+}
+
+@media(max-width:680px){
+  .metrics{grid-template-columns:1fr}
+  .header{flex-direction:column}
+  .skill-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .pipeline{flex-wrap:wrap}
+  .pipe-step{min-width:calc(50% - 1px)}
+  .pipe-step::after{display:none}
+  .pipe-step:first-child{border-radius:8px 0 0 0}
+  .pipe-step:nth-child(2){border-radius:0 8px 0 0;border-left:none}
+  .pipe-step:nth-child(3){border-radius:0;border-top:none}
+  .pipe-step:nth-child(4){border-radius:0;border-top:none;border-left:none}
+  .pipe-step:last-child{border-radius:0 0 8px 8px;border-top:none;grid-column:span 2}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- CLASSIFIED BANNER -->
+<div class="classified">
+  <span class="classified-text">QA Operations Center — Authorized Personnel Only</span>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🎯</div>
+    <div class="logo-text">
+      <h1>JERONNIMO</h1>
+      <p>AI QA Automation Engine — built by Pavlo Salo // Talkable PS</p>
+    </div>
+  </div>
+  <div class="status-badge">
+    <div class="pulse"></div>
+    <span>Operational</span>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric m-amber">
+    <div class="m-label">Loaded Skills</div>
+    <div class="m-value">12</div>
+    <div class="m-sub">across 5 categories</div>
+  </div>
+  <div class="metric m-green">
+    <div class="m-label">Scheduled Jobs</div>
+    <div class="m-value">3</div>
+    <div class="m-sub">Mon–Fri autonomous scans</div>
+  </div>
+  <div class="metric m-blue">
+    <div class="m-label">QA Operatives</div>
+    <div class="m-value">5</div>
+    <div class="m-sub">team members monitored</div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-amber">⚡</div>
+    <span class="section-title">QA Pipeline</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="pipeline">
+    <div class="pipe-step"><div class="p-icon">📋</div><div class="p-name">Jira Task</div><div class="p-sub">detect new</div></div>
+    <div class="pipe-step"><div class="p-icon">🔍</div><div class="p-name">Site Audit</div><div class="p-sub">playwright</div></div>
+    <div class="pipe-step"><div class="p-icon">🔗</div><div class="p-name">Referral Flow</div><div class="p-sub">e2e test</div></div>
+    <div class="pipe-step"><div class="p-icon">🐛</div><div class="p-name">Bug Report</div><div class="p-sub">auto-file</div></div>
+    <div class="pipe-step active"><div class="p-icon">✅</div><div class="p-name">QA Complete</div><div class="p-sub">jira comment</div></div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-green">📖</div>
+    <span class="section-title">Skill Inventory</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="skill-grid">
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">test-referral-flow</div><div class="skill-desc">E2E Playwright: advocate → friend → coupon</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">integration-audit</div><div class="skill-desc">JS lib, iframes, placement verification</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">incentive-checker</div><div class="skill-desc">Match task rewards vs live site text</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-qa">QA</span><div class="skill-info"><div class="skill-name">mobile-viewport</div><div class="skill-desc">Responsive checks, overflow detection</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-jira</div><div class="skill-desc">Full CRUD: tasks, bugs, comments, transitions</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-campaigns</div><div class="skill-desc">Campaign management and tracking</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-jira">JIRA</span><div class="skill-info"><div class="skill-name">talkable-scoping</div><div class="skill-desc">Scoping tasks and estimation</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-integration</div><div class="skill-desc">Site integration validation, JS snippets</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-esp</div><div class="skill-desc">Email service provider configs</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-intg">INTG</span><div class="skill-info"><div class="skill-name">talkable-context</div><div class="skill-desc">Talkable API, site slugs, admin</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-docs">DOCS</span><div class="skill-info"><div class="skill-name">talkable-confluence</div><div class="skill-desc">Wiki pages, QA guides, runbooks</div></div></div>
+    <div class="skill-item"><span class="skill-tag tag-docs">DOCS</span><div class="skill-info"><div class="skill-name">ps-departmental-wins</div><div class="skill-desc">Team wins and achievements tracking</div></div></div>
+  </div>
+</div>
+
+<!-- CRON -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-amber">⏱</div>
+    <span class="section-title">Scheduled Operations</span>
+    <div class="section-line"></div>
+  </div>
+  <div style="display:grid;gap:6px">
+    <div class="cron-item"><span class="cron-name"><span class="cron-dot"></span>QA Tasks + P0 Blockers — Morning Sweep</span><span class="cron-schedule">MON-FRI 08:00 EET</span></div>
+    <div class="cron-item"><span class="cron-name"><span class="cron-dot"></span>QA Tasks + P0 Blockers — Midday Check</span><span class="cron-schedule">MON-FRI 12:01 EET</span></div>
+    <div class="cron-item"><span class="cron-name"><span class="cron-dot"></span>QA Tasks + P0 Blockers — Afternoon Scan</span><span class="cron-schedule">MON-FRI 15:00 EET</span></div>
+  </div>
+</div>
+
+<!-- CONNECTIONS -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-green">🔌</div>
+    <span class="section-title">Active Connections</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="list-grid">
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Jira</span><span class="list-badge">LIVE</span></div>
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Confluence</span><span class="list-badge">LIVE</span></div>
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Telegram</span><span class="list-badge">LIVE</span></div>
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Playwright</span><span class="list-badge">LIVE</span></div>
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Browser</span><span class="list-badge">LIVE</span></div>
+    <div class="list-item"><span class="list-name"><span class="dot-live"></span>Talkable</span><span class="list-badge">LIVE</span></div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-blue">👤</div>
+    <span class="section-title">QA Operatives</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card lead">
+      <div class="team-avatar">⭐</div>
+      <div class="team-name">Pavlo Salo</div>
+      <div class="team-role" style="color:var(--amber)">Head of QA</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🔍</div>
+      <div class="team-name">Artemii Yatsenko</div>
+      <div class="team-role">QA Engineer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🛡️</div>
+      <div class="team-name">Vadym Borovskyi</div>
+      <div class="team-role">QA Engineer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🎯</div>
+      <div class="team-name">Valentina Minakova</div>
+      <div class="team-role">QA Engineer</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">⚡</div>
+      <div class="team-name">Viktoria Boiar</div>
+      <div class="team-role">QA Engineer</div>
+    </div>
+  </div>
+</div>
+
+<!-- CAPABILITIES -->
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon si-purple">💎</div>
+    <span class="section-title">Capabilities</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="cap-list">
+    <div class="cap-item"><span class="cap-icon">🔍</span><span class="cap-text">Automated post-launch QA — placement checks, incentive verification</span></div>
+    <div class="cap-item"><span class="cap-icon">🔗</span><span class="cap-text">E2E referral flow testing — advocate → friend → coupon via Playwright</span></div>
+    <div class="cap-item"><span class="cap-icon">📡</span><span class="cap-text">Jira monitoring — new QA Tasks and P0 Blockers, 3× daily</span></div>
+    <div class="cap-item"><span class="cap-icon">🐛</span><span class="cap-text">Auto-file bugs — correct format, no Impact/Fix sections</span></div>
+    <div class="cap-item"><span class="cap-icon">⚙️</span><span class="cap-text">Integration audits — JS lib, iframes, white-labeling, cross-origin</span></div>
+    <div class="cap-item"><span class="cap-icon">🎟️</span><span class="cap-text">Coupon validation — auto-apply, localStorage, redirect checks</span></div>
+    <div class="cap-item"><span class="cap-icon">📱</span><span class="cap-text">Mobile responsive testing — overflow detection across viewports</span></div>
+    <div class="cap-item"><span class="cap-icon">📝</span><span class="cap-text">Text proofing — spelling, grammar, incentive mismatch detection</span></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">
+    Built by <strong>Pavlo Salo</strong> — Head of QA, Talkable Professional Services<br>
+    Powered by OpenClaw + Claude Opus 4.6 — running 24/7 via Telegram
+  </div>
+  <div class="footer-right">
+    SYSTEM: OPERATIONAL<br>
+    UPTIME: CONTINUOUS<br>
+    CHANNEL: TELEGRAM
+  </div>
+</div>
+
+</div>
+</body>
+</html>
